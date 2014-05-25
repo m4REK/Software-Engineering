@@ -23,6 +23,7 @@ public class Frame extends JFrame {
 	JComboBox cbox;
 	JLabel keyLabel = new JLabel("Key");
 	JTextField keyFeld = new JTextField(2);
+	Map<String, Encryptor> encMap;
 
 	Encryptor encryptor;
 	Object selectedStrategy;
@@ -31,7 +32,6 @@ public class Frame extends JFrame {
 		super.setTitle("Verschlüsselung");
 
 		// HASH-MAP für JComboBox
-		final Map<String, Encryptor> encMap;
 		encMap = new HashMap<String, Encryptor>();
 		encMap.put("Reverse", new ReverseEncryptor());
 		encMap.put("Copy", new CopyEncryptor());
@@ -71,9 +71,8 @@ public class Frame extends JFrame {
 		add(buttonPanel, BorderLayout.SOUTH);
 
 		// INITIALISIERUNG
-		this.selectedStrategy = cbox.getSelectedItem();
-		this.encryptor = encMap.get(selectedStrategy);
 		keyFeld.setText("0");
+		getStrategyFromJComboBox();
 
 		// LISTENER
 		decButton.addActionListener(new ActionListener() {
@@ -82,6 +81,12 @@ public class Frame extends JFrame {
 				originalTextArea.setText(encryptor.setEncryptStrategie(
 						encryptedTextArea.getText(),
 						Integer.parseInt(keyFeld.getText())));
+				if (cbox.getSelectedItem() == "Caesar") {
+					// CAESAR DECRYPTION
+					originalTextArea.setText(encryptor.setEncryptStrategie(
+							encryptedTextArea.getText(),
+							26 - Integer.parseInt(keyFeld.getText())));
+				}
 
 			}
 		});
@@ -103,13 +108,18 @@ public class Frame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (cbox.getSelectedItem() == "Caesar") {
 					keyFeld.setEnabled(true);
-				}
-				selectedStrategy = cbox.getSelectedItem();
-				encryptor = encMap.get(selectedStrategy);
+				} else
+					keyFeld.setEnabled(false);
+				getStrategyFromJComboBox();
 
 			}
 		});
 
+	}
+
+	public void getStrategyFromJComboBox() {
+		this.selectedStrategy = cbox.getSelectedItem();
+		this.encryptor = encMap.get(selectedStrategy);
 	}
 
 	public static void main(String[] args) {
