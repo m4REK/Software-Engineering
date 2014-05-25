@@ -36,6 +36,7 @@ public class Frame extends JFrame {
 		encMap.put("Reverse", new ReverseEncryptor());
 		encMap.put("Copy", new CopyEncryptor());
 		encMap.put("Caesar", new CaesarEncryptor());
+		encMap.put("Affine", new AffineEncryptor());
 
 		// LAYOUT
 		originalTextPanel = new JPanel(new BorderLayout());
@@ -75,6 +76,8 @@ public class Frame extends JFrame {
 		getStrategyFromJComboBox();
 
 		// LISTENER
+
+		// ENTSCHLÜSSELUNG
 		decButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -87,10 +90,16 @@ public class Frame extends JFrame {
 							encryptedTextArea.getText(),
 							26 - Integer.parseInt(keyFeld.getText())));
 				}
+				// AFFINE DECRYPTION
+				else if (cbox.getSelectedItem() == "Affine") {
+					originalTextArea.setText(new AffineEncryptor()
+							.decrypt(encryptedTextArea.getText()));
+				}
 
 			}
 		});
 
+		// VERSCHLÜSSELUNG
 		encButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -106,7 +115,8 @@ public class Frame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (cbox.getSelectedItem() == "Caesar") {
+				if (cbox.getSelectedItem() == "Caesar"
+						|| cbox.getSelectedItem() == "Affine") {
 					keyFeld.setEnabled(true);
 				} else
 					keyFeld.setEnabled(false);
