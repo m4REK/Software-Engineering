@@ -1,4 +1,4 @@
 public interface Encryptor {
-	public String setEncryptStrategie(String text);
+	public String setEncryptStrategie(String text, int key);
 
 }
